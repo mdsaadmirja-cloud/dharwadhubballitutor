@@ -1,0 +1,6 @@
+{
+    "require": {
+        "propel/propel": "~2.0@dev",
+        "phpmailer/phpmailer": "^7.1"
+    }
+}

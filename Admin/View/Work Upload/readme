@@ -1,0 +1,82 @@
+# Employee Work Upload Module - Install Notes
+
+A completely separate module. Nothing in your existing Task Management
+Controllers/Models/Views/tables was touched.
+
+## 1. Database
+
+Run once:
+
+```
+Database/employee_work_upload_schema.sql
+```
+
+Creates two **new** tables only: `employee_work_uploads`, `employee_work_upload_files`.
+Does not alter `tasks`, `task_assignments`, or any existing table.
+
+## 2. Files to drop in
+
+```
+Admin/Model/EmployeeWorkUploadModel.php
+Admin/Controller/employeeworkuploadcontroller.php
+Admin/View/Work Upload/work-uploads.php
+Employee/View/Work Upload/work-upload.php
+Employee/View/Work Upload/submission-history.php
+```
+
+These mirror your existing conventions exactly:
+- Same `ConnectDb::getInstance()->getConnection()` / mysqli + prepared statements as `TaskModel.php`.
+- Same admin/employee action-gating pattern as `mytaskcontroller.php` (single controller,
+  `$adminActions` / `$employeeActions` arrays, `user_id` -> `trainers.id` conversion via
+  `getTrainerIdByUserId()` for the employee session).
+- Same Bootstrap 5 + Bootstrap Icons UI, same scrollable-modal CSS pattern used in
+  `task-management.php` / `my-tasks.php`.
+
+## 3. Path adjustments (only thing you need to check)
+
+Each view has a `CONTROLLER` constant at the top of its `<script>` block — same pattern
+your existing pages use ("adjust relative path to match your folder depth"). Given the
+folder layout the spec asked for (`Admin/View/Work Upload/` and `Employee/View/Work Upload/`
+as siblings of `Admin/Controller/`), the paths are pre-set to:
+
+- `Admin/View/Work Upload/work-uploads.php` → `../../Controller/employeeworkuploadcontroller.php`
+- `Employee/View/Work Upload/*.php` → `../../../Admin/Controller/employeeworkuploadcontroller.php`
+
+Adjust if your actual `www/` layout differs (identical to how `task-management.php` and
+`my-tasks.php` already say to do this).
+
+Uploaded files land in `uploads/work_uploads/` (new folder, separate from
+`uploads/task_files/`), same pattern as `saveAssignmentFile()` in your existing code.
+
+## 4. Menu wiring (add, don't replace)
+
+**Employee menu:** Dashboard | My Tasks | **Work Upload** | **Submission History**
+Link the two new items to `work-upload.php` and `submission-history.php`.
+
+**Admin menu:** Task Management | **Work Uploads**
+Link to `Admin/View/Work Upload/work-uploads.php`.
+
+## 5. Notifications
+
+- Admin page shows a live "N New Work Uploads Pending" badge
+  (`action=admin_pending_count`, counts `review_status = 'Pending'`).
+- Employee side exposes `action=my_review_summary` (counts of Approved / Needs Revision /
+  Rejected) if you want to surface a badge on the employee dashboard — wire it in wherever
+  your dashboard widgets live.
+
+## 6. Controller actions reference
+
+| Action | Who | Purpose |
+|---|---|---|
+| `upload_submit` | Employee | Submit new work (multipart, `files[]`) |
+| `upload_resubmit` | Employee | Edit + resubmit after "Needs Revision" |
+| `my_uploads_list` | Employee | Submission History table |
+| `my_upload_get` | Employee | View Details modal |
+| `my_review_summary` | Employee | Badge counts |
+| `admin_list` | Admin | Work Uploads table (filters: `review_status`, `employee_id`, `search`) |
+| `admin_get` | Admin | Review modal detail |
+| `admin_review` | Admin | Approve / Need Revision / Reject |
+| `admin_pending_count` | Admin | Pending badge |
+
+Allowed attachment types (enforced server-side, silently skips anything else):
+`zip, pdf, doc, docx, png, jpg, jpeg, mp4` — no limit on file count.

@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /Admin/
+Disallow: /blogadmin/
+Disallow: /middleware/
+Disallow: /lms/views/login.php
+Disallow: /*?*
+Disallow: /chatbot/chatbot.php
+
+Sitemap: https://www.dharwadhubballitutor.com/sitemap.xml

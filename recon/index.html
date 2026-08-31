@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RICON Event Feedback</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* --- Ultimate Design Styles --- */
+    :root {
+      --primary-gradient: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+      --accent-color: #007bff; 
+      --gold-accent: #ffc107;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--primary-gradient);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column; /* Stack card and footer */
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* --- Card Styling --- */
+    .card-custom {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 20px;
+      border: none;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      overflow: hidden;
+      max-width: 500px;
+      width: 100%;
+      position: relative;
+      z-index: 10;
+    }
+
+    .card-header-custom {
+      background: white;
+      padding: 30px 20px 10px;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+    }
+
+    .logo-img {
+      max-height: 80px; /* Adjust based on your actual logo aspect ratio */
+      width: auto;
+      margin-bottom: 15px;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    }
+
+    .card-header-custom h2 {
+      color: #333;
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+
+    .card-header-custom p {
+      color: #666;
+      margin: 5px 0 0;
+      font-size: 0.95rem;
+    }
+
+    .form-padding {
+      padding: 30px;
+    }
+
+    /* --- Form Elements --- */
+    .form-floating > label {
+      padding-left: 40px; 
+      color: #888;
+    }
+
+    .form-control, .form-select {
+      border-radius: 12px;
+      border: 1px solid #e1e5e9;
+      padding-left: 45px; 
+      background-color: #f8f9fa;
+      height: 55px; /* Taller inputs for ease of touch */
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
+      background-color: #fff;
+    }
+
+    .input-icon {
+      position: absolute;
+      top: 20px;
+      left: 15px;
+      z-index: 4;
+      color: var(--accent-color);
+      font-size: 1.1rem;
+    }
+    
+    /* Star Rating */
+    .star-rating {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: center;
+      gap: 12px;
+      margin: 15px 0 25px;
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 50px;
+    }
+    .star-rating input { display: none; }
+    .star-rating label {
+      font-size: 32px;
+      color: #ddd;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .star-rating input:checked ~ label,
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+      color: var(--gold-accent);
+      transform: scale(1.1);
+    }
+
+    /* Submit Button */
+    .btn-gradient {
+      background: linear-gradient(135deg, #0061f2 0%, #00c6f9 100%);
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 16px;
+      border-radius: 12px;
+      width: 100%;
+      font-size: 1.1rem;
+      box-shadow: 0 10px 20px rgba(0, 97, 242, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-gradient:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 25px rgba(0, 97, 242, 0.4);
+    }
+
+    .btn-gradient:disabled {
+      background: #ccc;
+      transform: none;
+    }
+
+    /* Loader */
+    .spinner-border {
+      width: 1.2rem;
+      height: 1.2rem;
+      margin-right: 8px;
+      display: none;
+    }
+
+    /* --- Footer Styling --- */
+    .footer-custom {
+      margin-top: 30px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    .footer-custom h5 {
+      font-weight: 700;
+      margin: 5px 0;
+      letter-spacing: 0.5px;
+    }
+    .footer-custom small {
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      color: #dfdfdf;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card-custom">
+  <div class="card-header-custom">
+    <img src="Recon-Expo-2026-Logo.png" alt="RICON 2026 Logo" class="logo-img">
+    
+    <p>Visitor Experience Feedback</p>
+    <p>Win iPhone 17 PRO</p>
+  </div>
+
+  <div class="form-padding">
+    <form id="feedbackForm" onsubmit="submitForm(event)">
+      
+      <div class="position-relative mb-3">
+        <i class="fas fa-user input-icon"></i>
+        <div class="form-floating">
+          <input type="text" class="form-control" id="name" placeholder="Name" required>
+          <label for="name">Full Name </label>
+        </div>
+      </div>
+
+      <div class="position-relative mb-3">
+        <i class="fas fa-phone input-icon"></i>
+        <div class="form-floating">
+          <input type="tel" class="form-control" id="phone" required  placeholder="Phone Number (10 digits)" pattern="[6-9]{1}[0-9]{9}" maxlength="10"/>
+          <label for="phone">Phone Number</label>
+        </div>
+      </div>
+
+      <div class="position-relative mb-3">
+        <i class="fas fa-id-badge input-icon"></i>
+        <div class="form-floating">
+          <select class="form-select" id="visitorType" required>
+            <option value="" selected disabled>Select Type</option>
+            <option>Buyer</option>
+            <option>Investor</option>
+            <option>Channel Partner</option>
+            <option>Builder</option>
+            <option>Architect</option>
+            <option>Other</option>
+          </select>
+          <label for="visitorType">I am a...</label>
+        </div>
+      </div>
+
+     
+        <div class=" position-relative">
+          <i class="fas fa-building input-icon"></i>
+          <div class="form-floating">
+            <select class="form-select" id="propertyType" required>
+              <option value="" selected disabled>Type</option>
+              <option>Commercial</option>
+              <option>Flat</option>
+              <option>Plot</option>
+            </select>
+            <label for="propertyType">Interest</label>
+          </div>
+        </div>
+        
+     
+
+      <div class="text-center mb-1 text-muted"><small class="fw-bold">How was your experience about RECON?</small></div>
+      <div class="star-rating">
+        <input type="radio" name="rating" id="star5" value="5"><label for="star5" title="Excellent"><i class="fas fa-star"></i></label>
+        <input type="radio" name="rating" id="star4" value="4"><label for="star4" title="Good"><i class="fas fa-star"></i></label>
+        <input type="radio" name="rating" id="star3" value="3"><label for="star3" title="Average"><i class="fas fa-star"></i></label>
+        <input type="radio" name="rating" id="star2" value="2"><label for="star2" title="Poor"><i class="fas fa-star"></i></label>
+        <input type="radio" name="rating" id="star1" value="1"><label for="star1" title="Very Poor"><i class="fas fa-star"></i></label>
+      </div>
+
+      <button type="submit" id="submitBtn" class="btn-gradient">
+        <span class="spinner-border text-light" role="status"></span>
+        <span>Submit & Enter Lucky Draw 🎁</span>
+      </button>
+
+    </form>
+  </div>
+</div>
+
+<div class="footer-custom">
+  <p class="mb-0" style="font-size: 0.85rem; opacity: 0.8;">Event Analytics Partner:</p>
+  <h5><a href="https://dharwadhubballitutor.com" class="text-white">DharwadHubballiTutor</a></h5>
+  <small>Data • Insights • Impact</small>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function submitForm(event) {
+  event.preventDefault(); 
+
+  const btn = document.getElementById("submitBtn");
+  const spinner = btn.querySelector(".spinner-border");
+  const btnText = btn.querySelector("span:not(.spinner-border)");
+  
+  btn.disabled = true;
+  spinner.style.display = "inline-block";
+  btnText.textContent = "Processing...";
+
+  const ratingEl = document.querySelector('input[name="rating"]:checked');
+  const ratingValue = ratingEl ? ratingEl.value : "Not Rated";
+
+   const formData = new FormData();
+  formData.append("name", document.getElementById("name").value);
+  formData.append("phone", document.getElementById("phone").value);
+  formData.append("visitorType", document.getElementById("visitorType").value);
+  formData.append("propertyType", document.getElementById("propertyType").value);
+  formData.append("rating", ratingValue);
+
+  fetch("save_feedback.php", {
+    method: "POST",
+    body: formData
+  })
+  .then(res => res.json())
+  .then(res => {
+    if (res.status === "success") {
+     
+    document.querySelector("form")?.reset();
+    btn.disabled = false;
+  
+  btnText.textContent = "Done";
+  spinner.style.display="none";
+  btnText.disabled=true;
+  Swal.fire({
+  title: "Thank you!",
+  text: "You are entered in today’s Lucky Draw 🎉",
+  icon: "success"
+});
+    } else {
+      alert(res.message);
+    }
+  })
+  .catch(() => alert("Submission failed"));
+}
+</script>
+
+</body>
+</html>
